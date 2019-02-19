@@ -36,4 +36,4 @@ File mp3 = await service.textToSpeech(
 );
 ```
 
-- Utilizing this plugin [this audioplayer plugin](https://pub.dartlang.org/packages/audioplayer) you could now play your mp3 file :)
+- Utilizing [this audioplayer plugin](https://pub.dartlang.org/packages/audioplayer) you could now play your mp3 file :)
