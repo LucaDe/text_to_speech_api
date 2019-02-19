@@ -1,6 +1,6 @@
 name: text_to_speech_api
 description: A simple wrapper for accessing Google's Text-To-Spech API and converting the results to MP3 files.
-version: 0.1
+version: 0.1.0
 author: Luca Demmel <luca.demmel@incudy.de>
 homepage: https://www.lucademmel.com
 
