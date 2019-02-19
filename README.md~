@@ -1,5 +1,5 @@
 # text_to_speech_api
-[![pub package](https://img.shields.io/pub/v/text_to_speech_api.svg)](https://pub.dartlang.org/packages/text_to_speech_api)
+
 A simple wrapper for Google's [Text-To-Spech API](https://cloud.google.com/text-to-speech). Simply list the available voices and convert your text to a mp3 by providing your API key, language code and voicename.
 
 ## Usage
