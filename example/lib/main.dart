@@ -29,10 +29,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
   TextToSpeechService _service = TextToSpeechService('Your api key');
   AudioPlayer _audioPlayer = AudioPlayer();
 
   void _playDemo() async {
+    setState(() {
+      _counter++;
+    });
     File file = await _service.textToSpeech(text: 'Hello World');
     _audioPlayer.play(file.path, isLocal: true);
   }
