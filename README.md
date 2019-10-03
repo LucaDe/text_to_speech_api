@@ -10,7 +10,7 @@ A simple wrapper for Google's [Text-To-Spech API](https://cloud.google.com/text-
 dependencies:
   flutter:
     sdk: flutter
-  text_to_speeech_api: ^0.0.1
+  text_to_speech_api: ^0.0.1
 ```
 
 - Initialize the TextToSpeechService (optional: provide your api key)
