@@ -12,12 +12,12 @@ const BASE_URL = 'https://texttospeech.googleapis.com/v1/';
 
 
 class FileService {
-  static Future<String >  get _localPath async {
+  static Future<String>  get _localPath async {
     final directory = await getTemporaryDirectory();
     return directory.path;
   }
 
-  static Future<File >  createAndWriteFile(String  filePath, content) async {
+  static Future<File>  createAndWriteFile(String  filePath, content) async {
     final path = await _localPath;
     final file = File('$path/$filePath');
     await file.writeAsBytes(content);
@@ -40,7 +40,7 @@ class TextToSpeechService {
   TextToSpeechService([this._apiKey]);
 
 
-  Future<File >  _createMp3File(AudioResponse  response) async {
+  Future<File>  _createMp3File(AudioResponse  response) async {
     String  id = new DateTime.now().millisecondsSinceEpoch.toString();
     String  fileName = '$id.mp3';
 
@@ -76,13 +76,13 @@ class TextToSpeechService {
     }
   }
 
-  Future<File >  textToSpeech(
+  Future<File>  textToSpeech(
       {@required String?  text,
       String  voiceName = 'de-DE-Wavenet-D',
       String  audioEncoding = 'MP3',
       String  languageCode = 'de-DE'}) async {
     const endpoint = 'text:synthesize';
-    String  body =
+    String body =
         '{"input": {"text":"$text"},"voice": {"languageCode": "$languageCode", "name": "$voiceName"},"audioConfig": {"audioEncoding": "$audioEncoding"}}';
     Future  request = http.post(_getApiUrl(endpoint), body: body);
     try {
