@@ -24,7 +24,7 @@ class FileService {
 }
 
 class AudioResponse {
-  final String audioContent;
+  final String? audioContent;
 
   AudioResponse(this.audioContent);
 
@@ -33,21 +33,25 @@ class AudioResponse {
 }
 
 class TextToSpeechService {
-  String _apiKey;
+  String? _apiKey;
 
   TextToSpeechService([this._apiKey]);
+
 
   Future<File> _createMp3File(AudioResponse response) async {
     String id = new DateTime.now().millisecondsSinceEpoch.toString();
     String fileName = '$id.mp3';
 
     // Decode audio content to binary format and create mp3 file
-    var bytes = base64.decode(response.audioContent);
+    var bytes = base64.decode(response.audioContent!);
     return FileService.createAndWriteFile(fileName, bytes);
   }
 
   _getApiUrl(String endpoint) {
-    return '$BASE_URL$endpoint?key=$_apiKey';
+
+    Uri returnUri = Uri.https('texttospeech.googleapis.com', '/v1/$endpoint', {'key': _apiKey});
+
+    return returnUri;
   }
 
   _getResponse(Future<http.Response> request) {
@@ -64,14 +68,14 @@ class TextToSpeechService {
     const endpoint = 'voices';
     Future request = http.get(_getApiUrl(endpoint));
     try {
-      await _getResponse(request);
+      await _getResponse(request.then((value) => value as http.Response));
     } catch (e) {
       throw (e);
     }
   }
 
   Future<File> textToSpeech(
-      {@required String text,
+      {@required String? text,
       String voiceName = 'de-DE-Wavenet-D',
       String audioEncoding = 'MP3',
       String languageCode = 'de-DE'}) async {
@@ -80,7 +84,7 @@ class TextToSpeechService {
         '{"input": {"text":"$text"},"voice": {"languageCode": "$languageCode", "name": "$voiceName"},"audioConfig": {"audioEncoding": "$audioEncoding"}}';
     Future request = http.post(_getApiUrl(endpoint), body: body);
     try {
-      var response = await _getResponse(request);
+      var response = await _getResponse(request.then((value) => value as http.Response));
       AudioResponse audioResponse = AudioResponse.fromJson(response);
       return _createMp3File(audioResponse);
     } catch (e) {
