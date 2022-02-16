@@ -12,12 +12,12 @@ const BASE_URL = 'https://texttospeech.googleapis.com/v1/';
 
 
 class FileService {
-  static Future<String>  get _localPath async {
+  static Future<String> get _localPath async {
     final directory = await getTemporaryDirectory();
     return directory.path;
   }
 
-  static Future<File>  createAndWriteFile(String  filePath, content) async {
+  static Future<File> createAndWriteFile(String  filePath, content) async {
     final path = await _localPath;
     final file = File('$path/$filePath');
     await file.writeAsBytes(content);
@@ -30,7 +30,7 @@ class AudioResponse {
 
   AudioResponse(this.audioContent);
 
-  AudioResponse.fromJson(Map<String , dynamic>  json)
+  AudioResponse.fromJson(Map<String, dynamic> json)
       : audioContent = json['audioContent'];
 }
 
@@ -40,23 +40,23 @@ class TextToSpeechService {
   TextToSpeechService([this._apiKey]);
 
 
-  Future<File>  _createMp3File(AudioResponse  response) async {
-    String  id = new DateTime.now().millisecondsSinceEpoch.toString();
-    String  fileName = '$id.mp3';
+  Future<File>  _createMp3File(AudioResponse response) async {
+    String id = new DateTime.now().millisecondsSinceEpoch.toString();
+    String fileName = '$id.mp3';
 
     // Decode audio content to binary format and create mp3 file
     var bytes = base64.decode(response.audioContent!);
     return FileService.createAndWriteFile(fileName, bytes);
   }
 
-  _getApiUrl(String  endpoint) {
+  _getApiUrl(String endpoint) {
 
-    Uri  returnUri = Uri.https('texttospeech.googleapis.com', '/v1/$endpoint', {'key': _apiKey});
+    Uri returnUri = Uri.https('texttospeech.googleapis.com', '/v1/$endpoint', {'key': _apiKey});
 
     return returnUri;
   }
 
-  _getResponse(Future<http.Response >  request) {
+  _getResponse(Future<http.Response> request) {
     return request.then((response) {
       print(response.statusCode);
       if (response.statusCode == 200) {
@@ -66,9 +66,9 @@ class TextToSpeechService {
     });
   }
 
-  Future  availableVoices() async {
+  Future availableVoices() async {
     const endpoint = 'voices';
-    Future  request = http.get(_getApiUrl(endpoint));
+    Future request = http.get(_getApiUrl(endpoint));
     try {
       await _getResponse(request.then((value) => value as http.Response));
     } catch (e) {
@@ -76,18 +76,18 @@ class TextToSpeechService {
     }
   }
 
-  Future<File>  textToSpeech(
-      {@required String?  text,
-      String  voiceName = 'de-DE-Wavenet-D',
-      String  audioEncoding = 'MP3',
-      String  languageCode = 'de-DE'}) async {
+  Future<File> textToSpeech(
+      {@required String? text,
+      String voiceName = 'de-DE-Wavenet-D',
+      String audioEncoding = 'MP3',
+      String languageCode = 'de-DE'}) async {
     const endpoint = 'text:synthesize';
     String body =
         '{"input": {"text":"$text"},"voice": {"languageCode": "$languageCode", "name": "$voiceName"},"audioConfig": {"audioEncoding": "$audioEncoding"}}';
-    Future  request = http.post(_getApiUrl(endpoint), body: body);
+    Future request = http.post(_getApiUrl(endpoint), body: body);
     try {
       var response = await _getResponse(request.then((value) => value as http.Response));
-      AudioResponse  audioResponse = AudioResponse.fromJson(response);
+      AudioResponse audioResponse = AudioResponse.fromJson(response);
       return _createMp3File(audioResponse);
     } catch (e) {
       throw (e);
