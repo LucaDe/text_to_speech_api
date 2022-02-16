@@ -9,15 +9,13 @@ import 'package:path_provider/path_provider.dart';
 
 const BASE_URL = 'https://texttospeech.googleapis.com/v1/';
 
-
-
 class FileService {
   static Future<String> get _localPath async {
     final directory = await getTemporaryDirectory();
     return directory.path;
   }
 
-  static Future<File> createAndWriteFile(String  filePath, content) async {
+  static Future<File> createAndWriteFile(String filePath, content) async {
     final path = await _localPath;
     final file = File('$path/$filePath');
     await file.writeAsBytes(content);
@@ -40,7 +38,7 @@ class TextToSpeechService {
   TextToSpeechService([this._apiKey]);
 
 
-  Future<File>  _createMp3File(AudioResponse response) async {
+  Future<File> _createMp3File(AudioResponse response) async {
     String id = new DateTime.now().millisecondsSinceEpoch.toString();
     String fileName = '$id.mp3';
 
